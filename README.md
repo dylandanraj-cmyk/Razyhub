@@ -1,140 +1,119 @@
-# 🚀 Razy HUB — Bot Discord
+# 🚀 Razy HUB Bot — Guide d'installation
 
-Bot Discord qui génère automatiquement ton serveur **Razy HUB** complet avec catégories, channels, rôles et messages d'accueil.
-
----
-
-## 📋 Ce que le bot crée
-
-### 🎭 Rôles
-| Rôle | Couleur | Description |
-|------|---------|-------------|
-| 👑 Owner | Or | Propriétaire du serveur |
-| ⚡ Administrateur | Rouge | Admin complet |
-| 🛡️ Staff | Orange | Modérateurs |
-| 💎 VIP | Bleu ciel | Membres VIP |
-| 🛒 Acheteur | Vert | Clients ayant acheté |
-| 👤 Membre | Gris | Membres de base |
-
-### 📁 Catégories & Channels
-- **📌 INFORMATIONS** — accueil, règlement, annonces, mises-à-jour
-- **🛒 BOUTIQUE** — prix, promotions, comment acheter
-- **💬 COMMUNAUTÉ** — général, présentations, off-topic, mèmes + vocaux
-- **🔐 ESPACE ACHETEURS** — téléchargements, licences, support, lounge
-- **🎫 SUPPORT** — tickets, faq
-- **⭐ AVIS** — avis clients, showcase
-- **🛡️ STAFF** — staff général, logs, sanctions + vocal
-
----
+## 📁 Structure du projet
+```
+bot/
+├── main.py              # Fichier principal
+├── requirements.txt     # Dépendances
+├── .env                 # Token Discord (à créer)
+├── razy.db              # Base de données SQLite (auto-générée)
+└── cogs/
+    ├── tickets.py       # Système de tickets complet
+    ├── moderation.py    # Modération complète
+    ├── automod.py       # Anti-lien & AutoMod
+    └── utility.py       # Leveling, Giveaway, Utilitaires
+```
 
 ## ⚙️ Installation
 
-### Étape 1 — Créer le bot Discord
+### 1. Prérequis
+- Python 3.10+
+- Un bot Discord avec les intents activés sur https://discord.com/developers
 
-1. Va sur [Discord Developer Portal](https://discord.com/developers/applications)
-2. Clique **New Application** → nom : `Razy HUB`
-3. Va dans **Bot** → clique **Add Bot**
-4. Active ces **Privileged Gateway Intents** :
-   - ✅ Server Members Intent
-   - ✅ Message Content Intent
-5. Copie le **Token** du bot
-6. Va dans **OAuth2 > URL Generator** :
-   - Coche `bot` + `applications.commands`
-   - Permissions : `Administrator`
-   - Copie le lien et invite le bot sur ton serveur
+### 2. Intents requis (portal Discord)
+✅ PRESENCE INTENT
+✅ SERVER MEMBERS INTENT
+✅ MESSAGE CONTENT INTENT
 
-### Étape 2 — Cloner le projet
-
+### 3. Setup
 ```bash
-git clone https://github.com/TON_USERNAME/razy-hub-bot.git
-cd razy-hub-bot
-```
-
-### Étape 3 — Configurer le .env (local)
-
-```bash
-cp .env.example .env
-# Édite .env et colle ton token Discord
-```
-
-### Étape 4 — Installer les dépendances (local)
-
-```bash
+# Installer les dépendances
 pip install -r requirements.txt
-python bot.py
+
+# Créer le fichier .env
+echo "DISCORD_TOKEN=ton_token_ici" > .env
+
+# Lancer le bot
+python main.py
 ```
 
----
+## 🎮 Commandes disponibles
 
-## 🚂 Déploiement sur Railway
+### 🎫 Tickets
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/ticket-panel` | Déployer le panel de tickets | Admin |
+| `/ticket-config` | Configurer catégorie/logs/rôle staff | Admin |
+| `/ticket-add` | Ajouter un membre au ticket | Manage Channels |
+| `/ticket-remove` | Retirer un membre du ticket | Manage Channels |
+| `/ticket-list` | Liste des tickets ouverts | Manage Channels |
 
-### Étape 1 — Push sur GitHub
+### 🔨 Modération
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/ban` | Bannir (avec raison + purge messages) | Ban Members |
+| `/unban` | Débannir par ID | Ban Members |
+| `/banlist` | Liste des bannis | Ban Members |
+| `/kick` | Expulser | Kick Members |
+| `/mute` | Timeout Discord (10m, 1h, 2d...) | Moderate Members |
+| `/unmute` | Retirer le timeout | Moderate Members |
+| `/warn` | Avertir (auto-sanction à 3/5 warns) | Manage Messages |
+| `/warns` | Voir les warns d'un membre | - |
+| `/unwarn` | Supprimer un warn par ID | Manage Messages |
+| `/clearwarns` | Effacer tous les warns | Admin |
 
-```bash
-git init
-git add .
-git commit -m "🚀 Initial commit — Razy HUB Bot"
-git branch -M main
-git remote add origin https://github.com/TON_USERNAME/razy-hub-bot.git
-git push -u origin main
-```
+### 🛡️ AutoMod
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/antilink` | Activer/configurer l'anti-lien | Admin |
+| `/antilink-whitelist` | Whitelist rôles/salons | Admin |
+| `/antilink-status` | Voir la config anti-lien | Manage Messages |
+| `/automod` | Configurer anti-spam/caps/mentions | Admin |
 
-### Étape 2 — Déployer sur Railway
+### 🎉 Events
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/giveaway` | Lancer un giveaway | Manage Messages |
+| `/giveaway-reroll` | Reroll un giveaway | Manage Messages |
+| `/poll` | Créer un sondage | Manage Messages |
+| `/reactionrole` | Panel de reaction roles | Manage Roles |
 
-1. Va sur [railway.app](https://railway.app) et connecte-toi avec GitHub
-2. Clique **New Project** → **Deploy from GitHub repo**
-3. Sélectionne ton repo `razy-hub-bot`
-4. Va dans **Variables** → ajoute :
-   ```
-   DISCORD_TOKEN = ton_token_ici
-   ```
-5. Railway détecte automatiquement le `Procfile` et lance `python bot.py`
-6. ✅ Ton bot tourne 24h/24 !
+### 📊 Stats & Utilitaires
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/level` | Voir son niveau XP | - |
+| `/leaderboard` | Top 10 XP du serveur | - |
+| `/userinfo` | Infos complètes sur un membre | - |
+| `/serverinfo` | Infos sur le serveur | - |
+| `/avatar` | Voir l'avatar | - |
+| `/ping` | Latence du bot | - |
+| `/botinfo` | Infos sur le bot | - |
 
----
+### ⚙️ Setup
+| Commande | Description | Permission |
+|----------|-------------|------------|
+| `/setup` | Générer le serveur Razy HUB | Admin |
+| `/reset` | Reset complet | Admin |
+| `/annonce` | Annonce pro avec embed | Manage Messages |
+| `/embed` | Embed personnalisé | Manage Messages |
+| `/say` | Faire parler le bot | Admin |
+| `/clear` | Supprimer des messages | Manage Messages |
+| `/lock` / `/unlock` | Verrouiller un salon | Manage Channels |
+| `/slowmode` | Slowmode | Manage Channels |
+| `/role` | Donner/retirer un rôle | Manage Roles |
 
-## 🎮 Utilisation
+## 🔧 Fonctionnalités automatiques
+- **Welcome/Leave** : Messages de bienvenue automatiques avec embed
+- **Auto-role** : Rôle `👤 Membre` assigné automatiquement
+- **Leveling** : +15 XP par message, level up avec notifications
+- **Anti-spam** : Mute automatique après X messages en Y secondes
+- **Anti-caps** : Suppression si trop de majuscules
+- **Anti-mention** : Mute si trop de mentions
+- **Auto-ban** : Ban automatique à 5 warns, mute à 3 warns
+- **Transcripts HTML** : Générés automatiquement à la fermeture des tickets
 
-Une fois le bot en ligne sur ton serveur :
-
-```
-/setup
-```
-
-> ⚠️ Tu dois avoir les permissions **Administrateur** pour lancer cette commande.
-
-Le bot va :
-1. Supprimer les channels/rôles existants
-2. Créer toute la structure Razy HUB
-3. Envoyer les messages d'accueil dans chaque channel
-4. T'assigner le rôle 👑 Owner automatiquement
-
----
-
-## 📁 Structure du projet
-
-```
-razy-hub-bot/
-├── bot.py              # Code principal du bot
-├── requirements.txt    # Dépendances Python
-├── Procfile           # Config Railway
-├── .env.example       # Template variables d'environnement
-├── .gitignore         # Fichiers ignorés par Git
-└── README.md          # Ce fichier
-```
-
----
-
-## 🔧 Personnalisation
-
-Dans `bot.py`, tu peux modifier :
-- **Les prix** dans le channel `prix-et-produits`
-- **Les noms des channels** selon tes besoins
-- **Les couleurs des rôles** (format RGB)
-- **Les descriptions des embeds** pour personnaliser ton branding
-
----
-
-## 📞 Support
-
-Des problèmes ? Rejoins le serveur Razy HUB et ouvre un ticket !
+## 📝 Notes importantes
+- La DB SQLite est créée automatiquement au premier démarrage
+- Les reaction roles persistent en DB (résistent aux redémarrages)
+- Les views de tickets sont persistantes (persistent views)
+- Les transcripts HTML sont stylés façon Discord
